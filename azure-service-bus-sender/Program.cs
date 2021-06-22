@@ -54,11 +54,13 @@ namespace azure_service_bus_sender
 
             var serializeUser = JsonConvert.SerializeObject(users);
 
-            string messageType = "Service 1";            
+            string messageType = "Service 1";
+
+            string messageId = Guid.NewGuid().ToString();
 
             var message = new ServiceBusMessage
             {
-                Id = serialNo,
+                Id = messageId,
                 Type = messageType,
                 Content = serializeUser
             };
@@ -86,7 +88,7 @@ namespace azure_service_bus_sender
 
         public class ServiceBusMessage
         {
-            public int Id { get; set; }
+            public string Id { get; set; }
             public string Type { get; set; }
             public string Content { get; set; }
         }
