@@ -18,7 +18,8 @@ namespace azure_service_bus_sender
         static async Task MainAsync()
         {
 
-            string ServiceBusConnectionString = "Endpoint=sb://es-poc-service-bus.servicebus.windows.net/;SharedAccessKeyName=send-sub-key;SharedAccessKey=nTWKo5drapqfcGpjD0mwdyxI+GKXsdc2JJKE7ALsA5A=;";
+            string ServiceBusConnectionString_primary = "Endpoint=sb://es-poc-service-bus.servicebus.windows.net/;SharedAccessKeyName=send-sub-key;SharedAccessKey=nTWKo5drapqfcGpjD0mwdyxI+GKXsdc2JJKE7ALsA5A=;";
+            string ServiceBusConnectionString = "Endpoint=sb://es-poc-service-bus.servicebus.windows.net/;SharedAccessKeyName=send-sub-key;SharedAccessKey=L+HBNJ9ZtJAyRvY5Iwj6iRqJUKD02nQwDnvcIxKNsks=;";
             string TopicName = "topic-alert";
 
             topicClient = new TopicClient(ServiceBusConnectionString, TopicName);
@@ -27,14 +28,13 @@ namespace azure_service_bus_sender
 
             int messageCount = Convert.ToInt32(Console.ReadLine());
 
-            for (int i = 1; i < messageCount; i++)
+            for (int i = 1; i <= messageCount; i++)
             {
+                // Send messages.
                 await SendUserMessage(i);
             }
             
-            // Send messages.
-
-            Console.WriteLine("Do you want send request from service 1? if yes 0 or press any for exist");
+            Console.WriteLine("Do you want send request from Availability Service? if yes 0 or press any for exist");
             
             int hasRequest = Convert.ToInt32(Console.ReadLine());
 
@@ -54,7 +54,7 @@ namespace azure_service_bus_sender
 
             var serializeUser = JsonConvert.SerializeObject(users);
 
-            string messageType = "Service 1";
+            string messageType = $"Availability-Service - SNo:{serialNo}";
 
             string messageId = Guid.NewGuid().ToString();
 
@@ -71,7 +71,7 @@ namespace azure_service_bus_sender
 
             var busMessage = new Message(Encoding.UTF8.GetBytes(serializeBody));
             busMessage.UserProperties.Add("Type", messageType);
-            busMessage.MessageId = messageId;
+            busMessage.MessageId = messageId;            
 
             await topicClient.SendAsync(busMessage);
 
@@ -98,7 +98,7 @@ namespace azure_service_bus_sender
             User user = new User();
             List<User> lstUsers = new List<User>();
             
-            for (int i = 1; i < 200; i++)
+            for (int i = 0; i < 200; i++)
             {                
                 lstUsers.Add(new User { Id = i , Name = $"Anandaraj {i}"}); 
             }
